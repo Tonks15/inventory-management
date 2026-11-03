@@ -10,10 +10,9 @@
       "env": {}
     },
     "github": {
-      "type": "stdio",
-      "command": "npx",
+      "command": "cmd",
       "args": [
-        "-y",
+        "/c", "npx", "-y",
         "@modelcontextprotocol/server-github"
       ],
       "env": {

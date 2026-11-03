@@ -6,6 +6,8 @@ Factory Inventory Management System Demo with GitHub integration - Full-stack ap
 
 ## Critical Tool Usage Rules
 
+Always document non-obvious logic changes with comments
+
 ### Subagents
 Use the Task tool with these specialized subagents for appropriate tasks:
 
