@@ -6,6 +6,7 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restocking: '補充発注',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
   },
@@ -112,6 +113,14 @@ export default {
     onTimeDelivery: '定時配達',
     itemsCount: '{count}件',
     quantity: '数量',
+    submittedOrders: '発注済み注文',
+    noSubmittedOrders: '補充発注はまだ送信されていません。',
+    submittedLoadError: '発注済み注文の読み込みに失敗しました',
+    ordersSubmitted: '発注件数',
+    totalSpend: '総支出額',
+    longestLeadTime: '最長リードタイム',
+    leadTime: 'リードタイム',
+    days: '{count}日',
     table: {
       orderNumber: '注文番号',
       orderId: '注文ID',
@@ -185,6 +194,37 @@ export default {
       change: '変化',
       trend: 'トレンド',
       period: '期間'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: '補充発注',
+    description: '予測需要に基づき、予算内でサプライヤーへの補充発注を計画します',
+    budget: '予算',
+    allocated: '配分額',
+    remaining: '残予算',
+    longestLeadTime: '最長リードタイム',
+    days: '{count}日',
+    recommendations: '推奨購入品目',
+    placeOrder: '発注する',
+    placingOrder: '発注中...',
+    orderPlaced: '発注が完了しました。',
+    orderConfirmation: '注文 {number} を送信しました。リードタイム: {days}日。',
+    viewOrders: '注文を表示',
+    orderError: '発注に失敗しました',
+    loadError: '補充データの読み込みに失敗しました',
+    emptyState: 'この予算では購入できる品目がありません。予算を増やすと推奨品目が表示されます。',
+    table: {
+      sku: 'SKU',
+      name: '品目名',
+      supplier: 'サプライヤー',
+      trend: 'トレンド',
+      demandGap: '需要ギャップ',
+      quantity: '数量',
+      unitCost: '単価',
+      lineCost: '明細金額',
+      leadTime: 'リードタイム'
     }
   },
 
@@ -302,6 +342,31 @@ export default {
     dueDate: '期限',
     addTask: 'タスクを追加',
     noTasks: 'タスクがありません。上記からタスクを追加してください！'
+  },
+
+  // Purchase Order Modal
+  purchaseOrder: {
+    createTitle: '発注書を作成',
+    viewTitle: '発注書',
+    sku: 'SKU',
+    shortage: '不足数',
+    units: '個',
+    supplierName: '仕入先名',
+    quantity: '数量',
+    unitCost: '単価 (USD)',
+    totalCost: '合計金額',
+    expectedDelivery: '納品予定日',
+    notes: '備考（任意）',
+    status: 'ステータス',
+    createdAt: '作成日',
+    submit: '発注書を作成',
+    submitting: '作成中...',
+    loading: '発注書を読み込み中...',
+    loadError: '発注書の読み込みに失敗しました。',
+    createError: '発注書の作成に失敗しました。もう一度お試しください。',
+    validationRequired: '必須項目をすべて入力してください。',
+    validationQuantity: '数量は1以上の整数で入力してください。',
+    validationUnitCost: '単価は0より大きい値を入力してください。'
   },
 
   // Language

@@ -35,5 +35,14 @@ recent_transactions = load_json_file('transactions.json')
 # Load purchase orders
 purchase_orders = load_json_file('purchase_orders.json')
 
+# Supplier cost and lead time for each demand-forecast SKU (used by restocking)
+restock_suppliers = load_json_file('restock_suppliers.json')
+
+# Restock orders submitted at runtime; kept apart from client orders and reset on restart
+restock_orders = []
+
+# User tasks created at runtime; kept in memory and reset on restart
+tasks = []
+
 # All data is now loaded from JSON files in the data/ directory
 # This allows for easier maintenance and updates of the sample data

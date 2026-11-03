@@ -6,6 +6,7 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -112,6 +113,14 @@ export default {
     onTimeDelivery: 'On-Time Delivery',
     itemsCount: '{count} items',
     quantity: 'Qty',
+    submittedOrders: 'Submitted Orders',
+    noSubmittedOrders: 'No restock orders have been submitted yet.',
+    submittedLoadError: 'Failed to load submitted orders',
+    ordersSubmitted: 'Orders Submitted',
+    totalSpend: 'Total Spend',
+    longestLeadTime: 'Longest Lead Time',
+    leadTime: 'Lead Time',
+    days: '{count} days',
     table: {
       orderNumber: 'Order Number',
       orderId: 'Order ID',
@@ -185,6 +194,37 @@ export default {
       change: 'Change',
       trend: 'Trend',
       period: 'Period'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: 'Restocking',
+    description: 'Plan supplier restock orders within a budget based on forecasted demand',
+    budget: 'Budget',
+    allocated: 'Allocated',
+    remaining: 'Remaining',
+    longestLeadTime: 'Longest Lead Time',
+    days: '{count} days',
+    recommendations: 'Recommended Purchases',
+    placeOrder: 'Place Order',
+    placingOrder: 'Placing Order...',
+    orderPlaced: 'Order placed.',
+    orderConfirmation: 'Order {number} was submitted. Lead time: {days} days.',
+    viewOrders: 'View orders',
+    orderError: 'Failed to place the order',
+    loadError: 'Failed to load restocking data',
+    emptyState: 'This budget does not fund any items. Increase the budget to see recommendations.',
+    table: {
+      sku: 'SKU',
+      name: 'Item Name',
+      supplier: 'Supplier',
+      trend: 'Trend',
+      demandGap: 'Demand Gap',
+      quantity: 'Quantity',
+      unitCost: 'Unit Cost',
+      lineCost: 'Line Cost',
+      leadTime: 'Lead Time'
     }
   },
 
@@ -302,6 +342,31 @@ export default {
     dueDate: 'Due Date',
     addTask: 'Add Task',
     noTasks: 'No tasks yet. Add your first task above!'
+  },
+
+  // Purchase Order Modal
+  purchaseOrder: {
+    createTitle: 'Create Purchase Order',
+    viewTitle: 'Purchase Order',
+    sku: 'SKU',
+    shortage: 'Shortage',
+    units: 'units',
+    supplierName: 'Supplier Name',
+    quantity: 'Quantity',
+    unitCost: 'Unit Cost (USD)',
+    totalCost: 'Total Cost',
+    expectedDelivery: 'Expected Delivery Date',
+    notes: 'Notes (optional)',
+    status: 'Status',
+    createdAt: 'Created',
+    submit: 'Create Purchase Order',
+    submitting: 'Creating...',
+    loading: 'Loading purchase order...',
+    loadError: 'Failed to load purchase order.',
+    createError: 'Failed to create purchase order. Please try again.',
+    validationRequired: 'Please fill in all required fields.',
+    validationQuantity: 'Quantity must be a whole number greater than 0.',
+    validationUnitCost: 'Unit cost must be greater than 0.'
   },
 
   // Language

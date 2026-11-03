@@ -74,6 +74,76 @@
           </table>
         </div>
       </div>
+
+      <!-- Restock orders submitted to suppliers; independent of the global filters -->
+      <div class="card submitted-orders">
+        <div class="card-header">
+          <h3 class="card-title">{{ t('orders.submittedOrders') }}</h3>
+        </div>
+        <div v-if="submittedLoading" class="loading">{{ t('common.loading') }}</div>
+        <div v-else-if="submittedError" class="error">{{ submittedError }}</div>
+        <div v-else-if="submittedOrders.length === 0" class="empty-state">
+          {{ t('orders.noSubmittedOrders') }}
+        </div>
+        <div v-else>
+          <div class="stats-grid submitted-stats">
+            <div class="stat-card info">
+              <div class="stat-label">{{ t('orders.ordersSubmitted') }}</div>
+              <div class="stat-value">{{ submittedOrders.length }}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">{{ t('orders.totalSpend') }}</div>
+              <div class="stat-value">{{ formatMoney(submittedTotalSpend) }}</div>
+            </div>
+            <div class="stat-card warning">
+              <div class="stat-label">{{ t('orders.longestLeadTime') }}</div>
+              <div class="stat-value">{{ t('orders.days', { count: submittedLongestLeadTime }) }}</div>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th class="col-order-number">{{ t('orders.table.orderNumber') }}</th>
+                  <th class="col-date">{{ t('orders.table.orderDate') }}</th>
+                  <th class="col-items">{{ t('orders.table.items') }}</th>
+                  <th class="col-value">{{ t('orders.table.totalValue') }}</th>
+                  <th class="col-status">{{ t('orders.table.status') }}</th>
+                  <th class="col-lead">{{ t('orders.leadTime') }}</th>
+                  <th class="col-date">{{ t('orders.table.expectedDelivery') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="order in submittedOrders" :key="order.id">
+                  <td class="col-order-number"><strong>{{ order.order_number }}</strong></td>
+                  <td class="col-date">{{ formatSafeDate(order.order_date) }}</td>
+                  <td class="col-items">
+                    <details class="items-details">
+                      <summary class="items-summary">
+                        {{ t('orders.itemsCount', { count: order.items.length }) }}
+                      </summary>
+                      <div class="items-dropdown">
+                        <div v-for="item in order.items" :key="item.sku" class="item-entry">
+                          <span class="item-name">{{ translateProductName(item.name) }}</span>
+                          <span class="item-meta">{{ item.supplier_name }} - {{ t('orders.quantity') }}: {{ item.quantity }}</span>
+                        </div>
+                      </div>
+                    </details>
+                  </td>
+                  <td class="col-value"><strong>{{ formatMoney(order.total_value) }}</strong></td>
+                  <td class="col-status">
+                    <span :class="['badge', getSubmittedStatusClass(order.status)]">
+                      {{ getSubmittedStatusLabel(order.status) }}
+                    </span>
+                  </td>
+                  <td class="col-lead">{{ t('orders.days', { count: order.lead_time_days }) }}</td>
+                  <td class="col-date">{{ formatSafeDate(order.expected_delivery) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +153,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { api } from '../api'
 import { useFilters } from '../composables/useFilters'
 import { useI18n } from '../composables/useI18n'
+import { formatCurrency } from '../utils/currency'
 
 export default {
   name: 'Orders',
@@ -153,9 +224,65 @@ export default {
       })
     }
 
-    onMounted(loadOrders)
+    // Submitted (restock) orders: own loading/error state so a failure here
+    // never blanks the client orders above. Ignores the global filters.
+    const submittedOrders = ref([])
+    const submittedLoading = ref(true)
+    const submittedError = ref(null)
+
+    const loadSubmittedOrders = async () => {
+      try {
+        submittedLoading.value = true
+        submittedError.value = null
+        submittedOrders.value = await api.getRestockOrders()
+      } catch (err) {
+        submittedError.value = t('orders.submittedLoadError') + ': ' + err.message
+      } finally {
+        submittedLoading.value = false
+      }
+    }
+
+    // Amounts are USD from the API; convert only at display time
+    const formatMoney = (amount) => formatCurrency(amount, currentCurrency.value)
+
+    const submittedTotalSpend = computed(() =>
+      submittedOrders.value.reduce((sum, o) => sum + o.total_value, 0)
+    )
+    const submittedLongestLeadTime = computed(() =>
+      submittedOrders.value.reduce((max, o) => Math.max(max, o.lead_time_days), 0)
+    )
+
+    // Date formatter that tolerates missing/invalid values
+    const formatSafeDate = (dateString) => {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) return '-'
+      return formatDate(dateString)
+    }
+
+    const getSubmittedStatusClass = (status) => getOrderStatusClass(status)
+
+    // Use the translated status when one exists, otherwise show the raw value
+    const getSubmittedStatusLabel = (status) => {
+      const key = `status.${String(status).toLowerCase()}`
+      const label = t(key)
+      return label === key ? status : label
+    }
+
+    onMounted(() => {
+      loadOrders()
+      loadSubmittedOrders()
+    })
 
     return {
+      submittedOrders,
+      submittedLoading,
+      submittedError,
+      submittedTotalSpend,
+      submittedLongestLeadTime,
+      formatMoney,
+      formatSafeDate,
+      getSubmittedStatusClass,
+      getSubmittedStatusLabel,
       t,
       loading,
       error,
@@ -201,6 +328,25 @@ export default {
 
 .col-value {
   width: 120px;
+}
+
+.col-lead {
+  width: 100px;
+}
+
+/* Visually separate the submitted orders overview from client orders */
+.submitted-orders {
+  margin-top: 2rem;
+}
+
+.submitted-stats {
+  margin-bottom: 1.25rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
 }
 
 /* Items details styling */

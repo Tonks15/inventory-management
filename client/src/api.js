@@ -94,6 +94,21 @@ export const api = {
     return response.data
   },
 
+  async getRestockingItems() {
+    const response = await axios.get(`${API_BASE_URL}/restocking/items`)
+    return response.data
+  },
+
+  async getRestockOrders() {
+    const response = await axios.get(`${API_BASE_URL}/restocking/orders`)
+    return response.data
+  },
+
+  async placeRestockOrder(items) {
+    const response = await axios.post(`${API_BASE_URL}/restocking/orders`, { items })
+    return response.data
+  },
+
   async createPurchaseOrder(purchaseOrderData) {
     const response = await axios.post(`${API_BASE_URL}/purchase-orders`, purchaseOrderData)
     return response.data
